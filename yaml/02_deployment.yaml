@@ -20,7 +20,7 @@ spec:
         # - name: regcred
         containers:
         - name: clustersecret
-          image: juravenator/clustersecret:0.0.6
+          image: juravenator/clustersecret:latest
           # imagePullPolicy: Always
           # Uncomment next lines for debug:
           command:
