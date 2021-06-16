@@ -95,16 +95,18 @@ def get_ns_list(logger,body,v1=None):
     avoidedns = []
 
     for matchns in matchNamespace:
+        if matchns == "*":
+            matchns = ".*"
         for ns in nss:
             if re.match(matchns, ns.metadata.name):
                 matchedns.append(ns.metadata.name)
-                logger.debug(f'Matched namespaces: {ns.metadata.name} matchpathern: {matchns}')
+                logger.debug(f'Matched namespaces: {ns.metadata.name} matchpattern: {matchns}')
     if avoidNamespaces:
         for avoidns in avoidNamespaces:
             for ns in nss:
                 if re.match(avoidns, ns.metadata.name):
                     avoidedns.append(ns.metadata.name)
-                    logger.debug(f'Skipping namespaces: {ns.metadata.name} avoidpatrn: {avoidns}')  
+                    logger.debug(f'Skipping namespaces: {ns.metadata.name} avoidpattern: {avoidns}')  
     # purge
     for ns in matchedns.copy():
         if ns in avoidedns:
@@ -159,6 +161,7 @@ async def namespace_watcher(patch,logger,meta,body,event,**kwargs):
     logger.debug(f"New namespace created: {new_ns} re-syncing")
     v1 = client.CoreV1Api()
     
+    ns_new_list=[]
     for k,v in csecs.items():
         obj_body = v['body']
         #logger.debug(f'k: {k} \n v:{v}')
